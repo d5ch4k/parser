@@ -25,7 +25,9 @@ add_custom_command(
     https://github.com/boostorg/boost.git boost_root
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
-if (MSVC)
+# MSVC determines the compiler and not the target platform
+# here we need to check WIN32
+if (WIN32)
   set(b2_exe b2.exe)
 else()
   set(b2_exe b2)
@@ -39,8 +41,23 @@ add_custom_target(boost_clone_deps
   VERBATIM)
 add_dependencies(boost_clone_deps boost_clone_superproject)
 
-if (MSVC)
-  set(bootstrap_cmd ./bootstrap.bat)
+
+if (WIN32)
+  # we need to pass the toolset as first parameter msvc, gcc or clang
+  # additionally set the environment variable CXX to the compiler ${CMAKE_CXX_COMPILER}
+
+  if (MSVC OR CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC")
+    message(STATUS "configure BOOST for MSVC style compiler frontend")
+    set(bootstrap_cmd ./bootstrap.bat msvc)
+  elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    message(STATUS "configure BOOST for Clang compiler")
+    set(bootstrap_cmd ./bootstrap.bat clang)
+    set(COMMAND_ENV set CXX=${CMAKE_CXX_COMPILER})
+  elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    message(STATUS "configure BOOST for GCC compiler")
+    set(bootstrap_cmd ./bootstrap.bat gcc)
+    set(COMMAND_ENV set CXX=${CMAKE_CXX_COMPILER})
+  endif ()
 else()
   # windres produces relocations that are rejected
   # by stricter ld configurations used in some distros
@@ -57,6 +74,7 @@ add_custom_command(
   COMMAND git submodule init libs/headers
   COMMAND git submodule init tools/boost_install
   COMMAND git submodule update --jobs 3 --depth 100
+  COMMAND ${COMMAND_ENV}
   COMMAND ${bootstrap_cmd}
   COMMAND ./b2 headers
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/boost_root)
