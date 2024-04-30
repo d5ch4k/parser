@@ -39,3 +39,6 @@ if (BUILD_WITH_HANA)
   add_example(json boost)
   add_example(callback_json boost)
 endif()
+
+add_example(calc2 ${libs})
+add_example(calc3 ${libs})
