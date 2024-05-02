@@ -78,7 +78,7 @@ endif ()
 ##################################################
 # Build config
 ##################################################
-set(BUILD_WITH_HANA false CACHE BOOL
+set(BUILD_WITH_HANA true CACHE BOOL
     "Build with optional Hana support (and BOOST_PARSER_USE_HANA_TUPLE defined).")
 if (BUILD_WITH_HANA)
   add_definitions(-DBOOST_PARSER_USE_HANA_TUPLE)

@@ -38,6 +38,7 @@ if (BUILD_WITH_HANA)
   add_example(self_filling_symbol_table boost)
   add_example(json boost)
   add_example(callback_json boost)
+  add_example(calc3lam ${libs})
 endif()
 
 add_example(calc2 ${libs})
