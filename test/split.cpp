@@ -125,7 +125,7 @@ int main()
         BOOST_TEST(count == 6);
     }
     {
-        char const * str = "XYZXYZaaXYZbaabaXYZXYZ";
+        char const str[] = "XYZXYZaaXYZbaabaXYZXYZ";
         auto r = str | bp::split(bp::lit("XYZ"));
         int count = 0;
         int const offsets[] = {0, 0, 3, 3, 6, 8, 11, 16, 19, 19, 22, 22};
@@ -137,7 +137,7 @@ int main()
         BOOST_TEST(count == 6);
     }
     {
-        char const * str = "XYZXYZaaXYZbaabaXYZXYZ";
+        char const str[] = "XYZXYZaaXYZbaabaXYZXYZ";
         auto const r = str | bp::split(bp::lit("XYZ"));
         int count = 0;
         int const offsets[] = {0, 0, 3, 3, 6, 8, 11, 16, 19, 19, 22, 22};
@@ -164,7 +164,7 @@ int main()
         BOOST_TEST(count == 0);
     }
     {
-        char const * str_ = "aaXYZb";
+        char const str_[] = "aaXYZb";
         auto str = str_ | bp::as_utf16;
         auto r = bp::split(str, bp::lit("XYZ"), bp::ws);
         int count = 0;
