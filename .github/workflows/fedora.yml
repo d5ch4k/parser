@@ -2,7 +2,7 @@ name: Fedora
 
 on:
     push:
-      branches: [ master, develop ]
+      branches: [ master, develop, baseline, feature/** ]
     pull_request:
       branches: [ master, develop ]
 
