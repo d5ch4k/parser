@@ -678,7 +678,7 @@ int main()
         BOOST_TEST(count == 0);
     }
     {
-        char const * str_ = "aa2,3,4b";
+        char const str_[] = "aa2,3,4b";
         auto str = str_ | bp::as_utf16;
         auto r = bp::transform_replace(str, bp::int_ % ',', bp::ws, f_u16str);
         int count = 0;
