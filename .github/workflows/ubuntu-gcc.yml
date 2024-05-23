@@ -1,0 +1,76 @@
+name: Ubuntu
+
+on:
+  push:
+    branches: [ master, develop, baseline, feature/** ]
+  pull_request:
+    branches: [ master, develop ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Debug
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - compiler_version: gcc-9
+            cxx_std: "17,2a"
+            os: ubuntu-20.04
+          - compiler_version: gcc-10
+            cxx_std: "11,14,17,2a"
+            os: ubuntu-22.04
+            install: g++-10
+          - compiler_version: gcc-11
+            cxx_std: "11,14,17,2a"
+            os: ubuntu-22.04
+          - compiler_version: gcc-12
+            cxx_std: "11,14,17,20,2b"
+            os: ubuntu-22.04
+            install: g++-12
+          - compiler_version: gcc-13
+            cxx_std: "11,14,17,20,2b"
+            os: ubuntu-24.04
+            install: g++-13
+          - compiler_version: gcc-14
+            cxx_std: "11,14,17,20,23"
+            os: ubuntu-24.04
+            install: g++-14
+
+    runs-on: ${{ matrix.os }}
+    container: ${{matrix.container}}
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup container environment
+        if: matrix.container
+        run: |
+          apt-get update
+          apt-get -y install sudo python3 git g++
+
+      - name: Install packages
+        if: matrix.install
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install ${{matrix.install}}
+
+      - name: Configure CMake
+        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+        run: |
+          mkdir build
+          cd build
+          cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler_version }} -DCXX_STD=${{ matrix.cxx_std }}
+
+      - name: Build
+        run: cd build ; make -j4
+
+      - name: Test
+        run: cd build ; make check
