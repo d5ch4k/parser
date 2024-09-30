@@ -73,8 +73,10 @@ set(USE_UBSAN false CACHE BOOL "Set to true to enable -fsanitize=undefined when 
 if (USE_ASAN AND USE_UBSAN)
     message(FATAL_ERROR "USE_ASAN and USE_UBSAN must not be enabled at the same time")
 elseif (USE_ASAN)
+    set(compile_flags -fsanitize=address)
     set(link_flags -fsanitize=address)
 elseif (USE_UBSAN)
+    set(compile_flags -fsanitize=undefined)
     set(link_flags -fsanitize=undefined)
 endif()
 
