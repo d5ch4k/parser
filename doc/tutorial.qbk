@@ -1042,7 +1042,7 @@ Now we just need to put the pieces together to make a parser:
 
 We've got a few new bits in play here, so let's break it down.  `'M'_l` is a
 /literal parser/.  That is, it is a parser that parses a literal `char`, code
-point, or string.  In this case, a `char` "M" is being parsed.  The `_l` bit
+point, or string.  In this case, a `char` `'M'` is being parsed.  The `_l` bit
 at the end is a _udl_ suffix that you can put after any `char`, `char32_t`, or
 `char const *` to form a literal parser.  You can also make a literal parser
 by writing _lit_, passing an argument of one of the previously mentioned
@@ -1134,13 +1134,6 @@ The full program:
 
 [self_filling_symbol_table_example]
 
-[note It is possible to add symbols to a _symbols_ permanently.  To do so, you
-have to use a mutable _symbols_ object `s`, and add the symbols by calling
-`s.insert_for_next_parse()`, instead of `s.insert()`.  These two operations
-are orthogonal, so if you want to both add a symbol to the table for the
-current top-level parse, and leave it in the table for subsequent top-level
-parses, you need to call both functions. ]
-
 [tip _symbols_ also has a call operator that does exactly what
 `.insert_for_next_parse()` does.  This allows you to chain additions with a
 convenient syntax, like this:
@@ -1156,6 +1149,19 @@ Unicode or ASCII parsing, this will not matter to you at all.  If you do
 non-Unicode parsing of a character encoding that is not a subset of Unicode
 (EBCDIC, for instance), it could cause problems.  See the section on _unicode_
 for more information.]
+
+It is possible to add symbols to a _symbols_ permanently.  To do so, you
+have to use a mutable _symbols_ object `s`, and add the symbols by calling
+`s.insert_for_next_parse()`, instead of `s.insert()`.  These two operations
+are orthogonal, so if you want to both add a symbol to the table for the
+current top-level parse, and leave it in the table for subsequent top-level
+parses, you need to call both functions.
+
+It is also possible to erase a single entry from the symbol table, or to clear
+the symbol table entirely.  Just as with insertion, there are versions of
+erase and clear for the current parse, and another that applies only to
+subsequent parses.  The full set of operations can be found in the _symbols_
+API docs.
 
 [endsect]
 
