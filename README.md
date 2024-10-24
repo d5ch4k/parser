@@ -54,8 +54,6 @@ Features:
 
 This library first appeared in Boost 1.87.0
 
-Online docs: https://tzlaine.github.io/parser
-
 Master status:
 
 [![Ubuntu](https://github.com/tzlaine/parser/actions/workflows/ubuntu.yml/badge.svg?branch=master)](https://github.com/tzlaine/parser/actions/workflows/ubuntu.yml)
