@@ -217,7 +217,7 @@ int main()
     {
         // add only for the next parse
         auto result = parse("next-addL50L", next_add_parser >> roman_numerals);
-        BOOST_TEST(!result); // TODO
+        BOOST_TEST(!result);
 
         result = parse("L", roman_numerals);
         BOOST_TEST(result);
@@ -273,8 +273,8 @@ int main()
         BOOST_TEST(*parse("V", roman_numerals) == 5);
 
         auto result = parse("next-delVV", next_delete_parser >> roman_numerals);
-        BOOST_TEST(result);       // TODO
-        BOOST_TEST(*result == 5); // TODO
+        BOOST_TEST(result);
+        BOOST_TEST(*result == 5);
 
         result = parse("V", roman_numerals);
         BOOST_TEST(!result);
@@ -326,8 +326,8 @@ int main()
         BOOST_TEST(*parse("L", roman_numerals) == 50);
 
         auto result = parse("next-clearI", next_clear_parser >> roman_numerals);
-        BOOST_TEST(result);       // TODO
-        BOOST_TEST(*result == 1); // TODO
+        BOOST_TEST(result);
+        BOOST_TEST(*result == 1);
 
         BOOST_TEST(!parse("I", roman_numerals));
         BOOST_TEST(!parse("L", roman_numerals));
