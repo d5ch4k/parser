@@ -11,6 +11,7 @@
 
 #include <any>
 #include <cstdint>
+#include <functional>
 #include <map>
 #include <memory>
 #include <optional>
@@ -84,11 +85,23 @@ namespace boost { namespace parser {
         {
             std::any trie_;
             bool has_case_folded_;
-            bool pending_operations_;
         };
 
         using symbol_table_tries_t =
             std::map<void *, symbol_table_trie_element, std::less<void *>>;
+
+        using pending_symtab_ops_visitor = std::function<void()>;
+        struct pending_symtab_ops_entry
+        {
+            pending_symtab_ops_visitor visit_;
+            // Contains std::vector<detail::symbol_table_operation<T>> (T is
+            // known to visit_).
+            std::any ops_;
+        };
+        using pending_symbol_table_operations_t = std::map<
+            void const *,
+            pending_symtab_ops_entry,
+            std::less<void const *>>;
 
         template<
             bool DoTrace,
@@ -103,7 +116,9 @@ namespace boost { namespace parser {
             int & indent,
             ErrorHandler const & error_handler,
             nope &,
-            symbol_table_tries_t & symbol_table_tries) noexcept;
+            symbol_table_tries_t & symbol_table_tries,
+            pending_symbol_table_operations_t &
+                pending_symbol_table_operations) noexcept;
 
         struct skip_skipper;
 
