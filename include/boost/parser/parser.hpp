@@ -6201,8 +6201,11 @@ namespace boost { namespace parser {
                 typename Parser::combining_groups>;
             using final_combining_groups = detail::
                 combined_combining_t<combining_groups, parser_combining_groups>;
+            using rhs_backtracking = decltype(detail::hl::prepend(
+                detail::hl::drop_front(typename Parser::backtracking{}),
+                std::bool_constant<AllowBacktracking>{}));
             using backtracking = decltype(detail::hl::concat(
-                BacktrackingTuple{}, typename Parser::backtracking{}));
+                BacktrackingTuple{}, rhs_backtracking{}));
             using parser_t = seq_parser<
                 decltype(detail::hl::concat(parsers_, parser.parser_.parsers_)),
                 backtracking,
