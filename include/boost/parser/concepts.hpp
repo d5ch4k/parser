@@ -31,9 +31,11 @@ namespace boost { namespace parser {
         std::forward_iterator<T> && code_unit<std::iter_value_t<T>>;
 
     //[ parsable_range_like_concept
+    //[ parsable_range_concept
     template<typename T>
     concept parsable_range = std::ranges::forward_range<T> &&
         code_unit<std::ranges::range_value_t<T>>;
+    //]
 
     template<typename T>
     concept parsable_pointer = std::is_pointer_v<std::remove_cvref_t<T>> &&
