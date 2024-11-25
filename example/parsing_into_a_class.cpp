@@ -33,7 +33,7 @@ int main()
     std::cout << input << "\n";
 
     //[ parsing_into_a_class_vec_of_strs
-    constexpr auto uint_string = bp::uint_ >> bp::char_ >> bp::char_;
+    constexpr auto uint_string = bp::uint_ >> +bp::char_;
     std::vector<std::string> vector_from_parse;
     if (parse(input, uint_string, bp::ws, vector_from_parse)) {
         std::cout << "That yields this vector of strings:\n";
