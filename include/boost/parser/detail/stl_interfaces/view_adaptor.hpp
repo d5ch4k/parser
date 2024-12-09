@@ -328,23 +328,20 @@ namespace boost::parser::detail { namespace stl_interfaces {
     {
         constexpr adaptor(F f) : f_(f) {}
 
-        // clang-format off
         template<typename... Args>
         constexpr auto operator()(Args &&... args) const
-        // clang-format on
         {
 #if BOOST_PARSER_DETAIL_STL_INTERFACES_USE_CONCEPTS
             if constexpr (std::is_invocable_v<F const &, Args...>) {
-                return f_((Args &&) args...);
+                return f_((Args &&)args...);
             } else {
-                return closure(
-                    stl_interfaces::bind_back(f_, (Args &&) args...));
+                return closure(stl_interfaces::bind_back(f_, (Args &&)args...));
             }
 #else
             return detail::adaptor_impl<
                 F const &,
                 detail::is_invocable_v<F const &, Args...>,
-                Args...>::call(f_, (Args &&) args...);
+                Args...>::call(f_, (Args &&)args...);
 #endif
         }
 

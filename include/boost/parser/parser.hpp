@@ -4434,22 +4434,18 @@ namespace boost { namespace parser {
 #endif
 
     namespace detail {
-        // clang-format off
         template<typename Action, typename Attribute>
         using action_direct_call_expr =
             decltype(std::declval<Action>()(std::declval<Attribute>()));
         template<typename Action, typename Attribute>
-        using action_apply_call_expr =
-            decltype(hl::apply(std::declval<Action>(), std::declval<Attribute>()));
+        using action_apply_call_expr = decltype(hl::apply(
+            std::declval<Action>(), std::declval<Attribute>()));
         template<typename Action, typename Attribute, typename Context>
         using action_assignable_to_val_direct_expr =
-            decltype(_val(std::declval<Context>()) =
-                     std::declval<Action>()(std::declval<Attribute>()));
+            decltype(_val(std::declval<Context>()) = std::declval<Action>()(std::declval<Attribute>()));
         template<typename Action, typename Attribute, typename Context>
         using action_assignable_to_val_apply_expr =
-            decltype(_val(std::declval<Context>()) =
-                     hl::apply(std::declval<Action>(), std::declval<Attribute>()));
-        // clang-format on
+            decltype(_val(std::declval<Context>()) = hl::apply(std::declval<Action>(), std::declval<Attribute>()));
 
         template<typename Action, typename Attribute, typename Context>
         constexpr auto action_assignable_to_val_direct()
@@ -6684,8 +6680,7 @@ namespace boost { namespace parser {
             \tparam T Constrained by `!parsable_range_like<T>`. */
 #if BOOST_PARSER_USE_CONCEPTS
         template<typename T>
-        // clang-format off
-        requires (!parsable_range_like<T>)
+            requires(!parsable_range_like<T>)
 #else
         template<
             typename T,
@@ -6693,7 +6688,6 @@ namespace boost { namespace parser {
                 std::enable_if_t<!detail::is_parsable_range_like_v<T>>>
 #endif
         constexpr auto operator()(T x) const noexcept
-        // clang-format on
         {
             BOOST_PARSER_ASSERT(
                 (detail::is_nope_v<Expected> &&
@@ -6758,10 +6752,9 @@ namespace boost { namespace parser {
 
             \tparam R Additionally constrained by
             `std::same_as<std::ranges::range_value_t<R>, char32_t>`. */
-        // clang-format off
 #if BOOST_PARSER_USE_CONCEPTS
         template<parsable_range_like R>
-        requires std::same_as<std::ranges::range_value_t<R>, char32_t>
+            requires std::same_as<std::ranges::range_value_t<R>, char32_t>
 #else
         template<
             typename R,
@@ -6770,14 +6763,13 @@ namespace boost { namespace parser {
                 std::is_same_v<detail::range_value_t<R>, char32_t>>>
 #endif
         constexpr auto operator()(sorted_t, R && r) const noexcept
-        // clang-format on
         {
             BOOST_PARSER_ASSERT(
                 ((!std::is_rvalue_reference_v<R &&> ||
                   !detail::is_range<detail::remove_cv_ref_t<R>>) &&
-                     "It looks like you tried to pass an rvalue range to "
-                     "char_().  Don't do that, or you'll end up with dangling "
-                     "references."));
+                 "It looks like you tried to pass an rvalue range to "
+                 "char_().  Don't do that, or you'll end up with dangling "
+                 "references."));
             BOOST_PARSER_ASSERT(
                 (detail::is_nope_v<Expected> &&
                  "If you're seeing this, you tried to chain calls on char_, "
@@ -7411,8 +7403,7 @@ namespace boost { namespace parser {
             that uses `x` as its quotation marks. */
 #if BOOST_PARSER_USE_CONCEPTS
         template<typename T>
-        // clang-format off
-        requires (!parsable_range_like<T>)
+            requires(!parsable_range_like<T>)
 #else
         template<
             typename T,
@@ -7420,7 +7411,6 @@ namespace boost { namespace parser {
                 std::enable_if_t<!detail::is_parsable_range_like_v<T>>>
 #endif
         constexpr auto operator()(T x) const noexcept
-        // clang-format on
         {
             if constexpr (!detail::is_nope_v<Quotes>) {
                 BOOST_PARSER_ASSERT(
@@ -7476,8 +7466,7 @@ namespace boost { namespace parser {
             Note that `"\\"` and `"\ch"` are always valid escape sequences. */
 #if BOOST_PARSER_USE_CONCEPTS
         template<typename T, typename U>
-        // clang-format off
-        requires (!parsable_range_like<T>)
+            requires(!parsable_range_like<T>)
 #else
         template<
             typename T,
@@ -7486,7 +7475,6 @@ namespace boost { namespace parser {
                 std::enable_if_t<!detail::is_parsable_range_like_v<T>>>
 #endif
         auto operator()(T x, symbols<U> const & escapes) const noexcept
-        // clang-format on
         {
             if constexpr (!detail::is_nope_v<Quotes>) {
                 BOOST_PARSER_ASSERT(
@@ -7496,9 +7484,8 @@ namespace boost { namespace parser {
                      "it!'"));
             }
             auto symbols = symbol_parser(escapes.parser_);
-            auto parser =
-                quoted_string_parser<detail::nope, decltype(symbols)>(
-                    char32_t(x), symbols);
+            auto parser = quoted_string_parser<detail::nope, decltype(symbols)>(
+                char32_t(x), symbols);
             return parser_interface(parser);
         }
 
@@ -8638,10 +8625,8 @@ namespace boost { namespace parser {
         Attr & attr,
         trace trace_mode = trace::off)
 #if BOOST_PARSER_USE_CONCEPTS
-        // clang-format off
-        requires (
+        requires(
             !detail::derived_from_parser_interface_v<std::remove_cvref_t<Attr>>)
-    // clang-format on
 #endif
     {
         detail::attr_reset reset(attr);
